@@ -5,5 +5,11 @@ class PostCreated {
         this.payload = { author, title, content, createdAt };
     }
 }
-
-module.exports = { PostCreated };
+class PostDeleted {
+    constructor({ id, deletedAt }) {
+        this.type = 'PostDeleted';
+        this.aggregateId = id;
+        this.payload = { deletedAt };
+    }
+}
+module.exports = { PostCreated, PostDeleted };

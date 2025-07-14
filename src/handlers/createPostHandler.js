@@ -7,17 +7,11 @@ async function handleCreatePost(cmd) {
     const id = uuid();
     const createdAt = new Date().toISOString();
     const evt = new PostCreated({ id, author: cmd.author, title: cmd.title, content: cmd.content, createdAt });
-
-    // 1. Lưu event
     await pool.query(
         'INSERT INTO event_store (aggregate_id, type, payload) VALUES ($1, $2, $3)',
         [evt.aggregateId, evt.type, evt.payload]
     );
-
-    // 2. Phát đi
-    eventBus.emit(evt.type, evt);
-
-    return { id, ...evt.payload };
+    await eventBus.emitAsync(evt.type, evt);
+    return { id, author: cmd.author, title: cmd.title, content: cmd.content, createdAt };
 }
-
 module.exports = { handleCreatePost };
