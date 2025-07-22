@@ -3,7 +3,6 @@ const cors = require('cors');
 require('dotenv').config();
 const migrate = require('./migrate');
 const postsRouter = require('./routes/posts');
-const snapshotsRouter = require('./routes/snapshots');
 require('./projections/postProjection');
 
 async function start() {
@@ -11,8 +10,7 @@ async function start() {
     const app = express();
     app.use(cors());
     app.use(express.json());
-    app.use('/posts', postsRouter);
-    app.use('/snapshots', snapshotsRouter);
+    app.use('/', postsRouter);
     app.get('/health', (req, res) => res.status(200).json({ status: 'healthy' }));
 
     const PORT = process.env.PORT || 4002;
